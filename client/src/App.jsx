@@ -1,23 +1,33 @@
-import { BrowserRouter as Router , Route , Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Signin from "./Pages/Signin";
 import SignUp from "./Pages/SignUp";
 import Profile from "./Pages/Profile";
 import Header from "./Components/Header";
+import PrivateRoute from "./Components/PrivateRoute";
+import CreateListing from "./Pages/CreateListing";
+import Listing from "./Pages/Listing";
+import UpdateListing from "./Components/UpdateListing";
+
 function App() {
   return (
     <Router>
-      <Header/>
+      <Header />
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/about" element={<About/>}/>
-        <Route path="/sign-in" element={<Signin/>}/>
-        <Route path="/sign-up" element={<SignUp/>}/>
-        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/sign-in" element={<Signin />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing/>}/>
+          <Route path="/update-listing/:id" element={<UpdateListing/>}/>
+        </Route>
+        <Route path="/listing/:id" element={<Listing/>}></Route>
       </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
