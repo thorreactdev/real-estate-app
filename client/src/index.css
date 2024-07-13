@@ -8,6 +8,9 @@
 body{
     background-color: rgb(241, 245, 241);
 }
+::-webkit-scrollbar{
+    width: 0px;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

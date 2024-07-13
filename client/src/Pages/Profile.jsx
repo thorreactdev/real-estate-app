@@ -17,6 +17,9 @@ import {
   signOutUserStart,signOutUserFailure, signOutUserSuccess
 } from "../app/user/userSlice";
 import { Link } from "react-router-dom"
+import { toast } from 'react-toastify';
+import DeletePopup from "../Components/DeletePopup";
+import SignoutPopup from "../Components/SignoutPopup";
 
 function Profile() {
   const fileref = useRef(null);
@@ -25,9 +28,11 @@ function Profile() {
   const [fileUploadPerc, setFileUploadPerc] = useState(null);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false);
+  // const [updateSuccess, setUpdateSuccess] = useState(false);
   const [userListing , setUserListing] = useState([]);
   const [listingError , setListingError] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const[signOutPopup , setSignOutPopup] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -72,12 +77,15 @@ function Profile() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log(data);
       if (data.success === false) {
         dispatch(updateUserFailure(data?.message));
         return;
       }
-      dispatch(updateUserSuccess(data));
-      setUpdateSuccess(true);
+      dispatch(updateUserSuccess(data?.rest));
+      toast.success(data?.message);
+      
+      // setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
     }
@@ -112,6 +120,7 @@ function Profile() {
         return;
       }
       dispatch(signOutUserSuccess(data));
+      toast.success(data);
     } catch (error) {
       dispatch(signOutUserFailure(error?.message));
     }
@@ -227,13 +236,13 @@ function Profile() {
 
       </form>
       <div className="flex justify-between mt-4">
-        <span className="text-red-700 cursor-pointer" onClick={handleDeleteUser} >Delete account</span>
-        <span className="text-red-700 cursor-pointer" onClick={handleSignout}>Sign out</span>
+        <span className="text-red-700 cursor-pointer" onClick={()=> setIsDeletePopupOpen(true)} >Delete account</span>
+        <span className="text-red-700 cursor-pointer" onClick={()=> setSignOutPopup(true)}>Sign out</span>
       </div>
       <p className="text-red-700 mt-2">{error}</p>
-      <p className="text-green-700">
+      {/* <p className="text-green-700">
         {updateSuccess ? "User Updated Successfully" : ""}
-      </p>
+      </p> */}
       <p className="text-green-700 text-center text-md hover:underline cursor-pointer mt-2" onClick={handleUserListing}>Show Listing</p>
         <p className='text-red-700 mt-5'>
         {listingError ? 'Error showing listings' : ''}
@@ -279,6 +288,18 @@ function Profile() {
         </div>
         )
        }
+        {isDeletePopupOpen && (
+         <DeletePopup 
+           onClose={() => setIsDeletePopupOpen(false)} 
+           onConfirm={handleDeleteUser}
+         />
+       )}
+        {signOutPopup && (
+         <SignoutPopup 
+           onClose={() => setSignOutPopup(false)} 
+           onConfirm={handleSignout}
+         />
+       )}
 
     </div>
   );

@@ -1,4 +1,5 @@
 import Listing from "../models/listingModel.js";
+import SubscribeSchema from "../models/subscribeModel.js";
 import User from "../models/userModel.js";
 import { errorHandler } from "../utils/erroMessage.js";
 import bycryptjs from "bcryptjs";
@@ -21,7 +22,7 @@ export const updateUser = async(req,res, next) =>{
         
 
         const { password , ...rest } = updatedUser._doc;
-        res.status(200).json(rest);
+        res.status(200).json({rest , message : "User Updated Successfully"});
     } catch (error) {
         next(error);
     }
@@ -49,4 +50,31 @@ export const getUserListing = async(req,res,next) =>{
     }
 }
 
+export const getUser = async(req , res , next) =>{
+    try {
+        const userListing = await User.findById(req.params.id);
+        console.log(userListing);
+        if(!userListing) return next(errorHandler(404 , "User Not Found"));
+        const { password , ...rest } = userListing._doc;
+        res.status(200).json(rest);
+    } catch (error) {
+        next(error);
+    }
+}
 
+export const subscribedUser = async(req,res,next) =>{
+    const { email , userRef } = req.body;
+    if(!email || !userRef){
+        return next(errorHandler(404 , "Please Enter Valid Email"))
+    }
+    try {
+        let subscription = await SubscribeSchema.findOne({ email });
+        if(subscription) return next(errorHandler(404 , "You Have Already Subscribed"));
+        subscription = new SubscribeSchema({ email , userRef });
+        await subscription.save();
+        res.status(200).json("Subscribed Successfully");
+    } catch (error) {
+        console.log(error);
+        next(error); 
+    }
+};

@@ -9,6 +9,9 @@ import PrivateRoute from "./Components/PrivateRoute";
 import CreateListing from "./Pages/CreateListing";
 import Listing from "./Pages/Listing";
 import UpdateListing from "./Components/UpdateListing";
+import Search from "./Components/Search";
+import Popup from "./Components/Popup";
+// import Footer from "./Components/Footer";
 
 function App() {
   return (
@@ -25,7 +28,10 @@ function App() {
           <Route path="/update-listing/:id" element={<UpdateListing/>}/>
         </Route>
         <Route path="/listing/:id" element={<Listing/>}></Route>
+        <Route path="/search" element={<Search/>}/>
+        <Route path="/popup" element={<Popup/>}/>
       </Routes>
+      {/* <Footer/> */}
     </Router>
   );
 }

@@ -1,8 +1,17 @@
+import FetchingListings from "../Components/FetchingListings"
+import Footer from "../Components/Footer"
+import Hero from "../Components/Hero"
+import Slider from "../Components/Slider"
 
 
 function Home() {
   return (
-    <div>Home</div>
+    <>
+    <Hero/>
+    <Slider/>
+    <FetchingListings/>
+    <Footer/>
+    </>
   )
 }
 
