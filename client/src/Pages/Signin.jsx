@@ -3,6 +3,7 @@ import { Link , useNavigate} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signInStart,signInFailure,signInSuccess } from "../app/user/userSlice";
 import OAuth from "../Components/OAuth";
+import { toast } from "react-toastify";
 
 const INITIAL_DATA ={
   email: "",
@@ -27,6 +28,9 @@ function Signin() {
   async function handleSubmit(e){
     e.preventDefault();
     try {
+      if(!formData?.email || !formData?.password){
+        return toast.error("All The Fields Are Required");
+      }
       dispatch(signInStart())
       const res = await fetch('/api/auth/signin', {
         method: 'POST',

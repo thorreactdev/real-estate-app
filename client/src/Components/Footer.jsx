@@ -128,16 +128,16 @@ export default function Footer() {
             </p>
           </div>
           <div className="flex gap-4 text-xl">
-            <Link>
+            <Link to="https://www.facebook.com/profile.php?id=100065309109404&mibextid=ZbWKwL" target="_blank">
               <FaFacebook className="text-green-700" />
             </Link>
-            <Link>
+            <Link to="https://www.instagram.com/__vinay__04" target="_blank">
               <RiInstagramFill className="text-green-700" />
             </Link>
-            <Link>
+            <Link to="https://www.linkedin.com/in/vinay-prajapati-3329b3289" target="_blank">
               <FaLinkedin className="text-green-700" />
             </Link>
-            <Link>
+            <Link to="https://github.com/thorreactdev" target="_blank">
               <FaGithub className="text-green-700" />
             </Link>
           </div>

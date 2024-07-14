@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link , useNavigate} from "react-router-dom";
 import OAuth from "../Components/OAuth";
+import { toast } from "react-toastify"
 
 const INITIAL_DATA ={
   username: "",
@@ -25,6 +26,9 @@ function SignUp() {
   async function handleSubmit(e){
     e.preventDefault();
     try {
+      if(!formData.username || formData.email || formData.password){
+        return toast.error("All The Fields are Required");
+      }
       setLoading(true);
       const res = await fetch('/api/auth/signup', {
         method: 'POST',

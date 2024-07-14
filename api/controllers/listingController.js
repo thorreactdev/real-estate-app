@@ -1,11 +1,41 @@
 import Listing from "../models/listingModel.js";
+import SubscribeSchema from "../models/subscribeModel.js";
+import { sendEmail } from "../utils/emailService.js";
 import { errorHandler } from "../utils/erroMessage.js";
 
 export const createListing = async(req,res,next) =>{
     try {
         const listing = await Listing.create(req.body);
+        const subscribers = await SubscribeSchema.find();
+        console.log(subscribers);
+        const emailContent = `
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; font-family: Arial, sans-serif;">
+                <img src="${req.body.imageUrls[0]}" alt="${req.body.name}" style="width: 100%; max-width: 600px; height: auto; border-radius: 10px; margin-bottom: 20px;">
+                <h2 style="color: #333; margin-bottom: 10px;">${req.body.name}</h2>
+                <p style="color: #555;">${req.body.description}</p>
+                <p><strong>Address:</strong> ${req.body.address}</p>
+                <p><strong>Regular Price:</strong> $${req.body.regularPrice}</p>
+                ${req.body.discountPrice ? `<p><strong>Discount Price:</strong> $${req.body.discountPrice}</p>` : ''}
+                <p><strong>Bathrooms:</strong> ${req.body.bathrooms}</p>
+                <p><strong>Bedrooms:</strong> ${req.body.bedrooms}</p>
+                <p><strong>Furnished:</strong> ${req.body.furnished ? 'Yes' : 'No'}</p>
+                <p><strong>Parking:</strong> ${req.body.parking ? 'Yes' : 'No'}</p>
+                <p><strong>Type:</strong> ${req.body.type}</p>
+                <p><strong>Offer:</strong> ${req.body.offer ? 'Yes' : 'No'}</p>
+                <div style="margin-top: 20px;">
+                    <a href="https://real-estate-app-mpmk.onrender.com/" style="display: inline-block; padding: 10px 20px; color: #fff; background-color: #007BFF; border-radius: 5px; text-decoration: none;">Check it out on our platform!</a>
+                </div>
+            </div>
+        `;
+        const emailPromises = subscribers.map((subscribe)=>{
+            return sendEmail(
+                subscribe.email,
+                "New Property Uploaded",
+                emailContent
+            )
+        });
+        await Promise.all(emailPromises);
         res.status(201).json(listing);
-        
     } catch (error) {
         next(error);
     }
