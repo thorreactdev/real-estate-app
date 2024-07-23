@@ -11,6 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
 export const sendEmail = (to, subject, htmlContent) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
